@@ -101,4 +101,8 @@ def get_matrices(data, formula):
     Z = buildz(randef_terms, data)
     X = dmatrix(ModelDesc(model_description.lhs_termlist, fixef_terms), data)
 
-    return X, Z
+    _, q = Z.shape
+
+    L = np.eye(q)
+
+    return X, Z, L
