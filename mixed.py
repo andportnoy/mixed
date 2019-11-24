@@ -6,7 +6,7 @@ from collections import namedtuple
 import numpy as np
 
 from patsy import demo_data
-from patsy import dmatrix
+from patsy import dmatrix, dmatrices
 
 from patsy.parse_formula import Operator
 from patsy.parse_formula import _default_ops
@@ -99,10 +99,10 @@ def get_matrices(data, formula):
             fixef_terms.append(term)
 
     Z = buildz(randef_terms, data)
-    X = dmatrix(ModelDesc(model_description.lhs_termlist, fixef_terms), data)
+    Y, X = dmatrices(ModelDesc(model_description.lhs_termlist, fixef_terms), data)
 
     _, q = Z.shape
 
     L = np.eye(q)
 
-    return X, Z, L
+    return X, Z, L, Y
