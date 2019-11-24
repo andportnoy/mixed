@@ -5,9 +5,9 @@ import pandas as pd
 parser = argparse.ArgumentParser()
 parser.add_argument('--data')
 parser.add_argument('--formula')
-parser.add_argument('-X')
-parser.add_argument('-Z')
-parser.add_argument('-L')
+parser.add_argument('--X')
+parser.add_argument('--Z')
+parser.add_argument('--L')
 
 args = parser.parse_args()
 
