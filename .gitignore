@@ -1,0 +1,5 @@
+*.bin
+*.feather
+venv
+__pycache__
+.ipynb_checkpoints
