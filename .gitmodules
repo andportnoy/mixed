@@ -1,0 +1,3 @@
+[submodule "lme4pureR"]
+	path = lme4pureR
+	url = https://github.com/lme4/lme4pureR
