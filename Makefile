@@ -49,5 +49,9 @@ data.feather: columns.txt
 	@echo 'Generating data from list of columns...'
 	@python3 generate_data.py --columns $^ --data $@
 
+setup:
+	pip3 install -U patsy pandas feather-format
+	MAKE='make -j' Rscript -e 'install.packages(c("lme4", "optparse", "feather"), repos="cloud.r-project.org")'
+
 clean:
 	rm -rf $(wildcard *.feather *.bin __pycache__)
