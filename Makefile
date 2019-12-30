@@ -1,4 +1,4 @@
-DMATRICES = X Z L
+DMATRICES = X Z Lambdat
 FMATRICES = Whalf WX Wy ZtW XtWX XtWy ZtWX ZtWy
 
 DMATRICES_R  = $(addsuffix -r.bin,  $(DMATRICES))
@@ -38,12 +38,12 @@ check_design: $(DMATRICES_PY) $(DMATRICES_R)
 $(DMATRICES_R): data.feather formula.txt
 	@echo 'Generating design matrices in R...'
 	@Rscript build_matrices.r --data data.feather --formula formula.txt \
-		--X X-r.bin --Z Z-r.bin --L L-r.bin
+		--X X-r.bin --Z Z-r.bin --Lambdat Lambdat-r.bin
 
 $(DMATRICES_PY): data.feather formula.txt
 	@echo 'Generating design matrices in Python...'
 	@python3 build_matrices.py --data data.feather --formula formula.txt \
-		--X X-py.bin --Z Z-py.bin --L L-py.bin
+		--X X-py.bin --Z Z-py.bin --Lambdat Lambdat-py.bin
 
 data.feather: columns.txt
 	@echo 'Generating data from list of columns...'

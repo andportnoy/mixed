@@ -13,7 +13,7 @@ data = pd.read_feather(args.data)
 with open(args.formula, 'r') as file:
     formula = file.read().strip()
 
-X, Z, L, y = mixed.get_matrices(data, formula)
+X, Z, Lambdat, y = mixed.get_matrices(data, formula)
 
 n = len(y)
 

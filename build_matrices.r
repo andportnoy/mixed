@@ -7,7 +7,7 @@ option_list <- list(
     make_option("--formula"),
     make_option("--X"),
     make_option("--Z"),
-    make_option("--L")
+    make_option("--Lambdat")
 )
 opt <- parse_args(OptionParser(option_list=option_list))
 
@@ -24,6 +24,6 @@ file <- file(opt$Z, "wb")
 writeBin(c(t(as.matrix(lf$reTrms$Zt))), file)
 close(file)
 
-file <- file(opt$L, "wb")
+file <- file(opt$Lambdat, "wb")
 writeBin(c(as.matrix(lf$reTrms$Lambdat)), file)
 close(file)
