@@ -1,5 +1,5 @@
 DMATRICES = X Z Lambdat
-FMATRICES = Whalf WX Wy ZtW XtWX XtWy ZtWX ZtWy
+FMATRICES = Whalf WX Wy ZtW XtWX XtWy ZtWX ZtWy L
 
 DMATRICES_R  = $(addsuffix -r.bin,  $(DMATRICES))
 DMATRICES_PY = $(addsuffix -py.bin, $(DMATRICES))

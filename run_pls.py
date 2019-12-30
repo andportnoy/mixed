@@ -40,3 +40,9 @@ ZtWX.tofile('ZtWX-py.bin')
 
 ZtWy = ZtW @ Wy
 ZtWy.tofile('ZtWy-py.bin')
+
+LambdatZtW = Lambdat @ ZtW
+I = np.eye(Lambdat.shape[0])
+
+L = np.linalg.cholesky(LambdatZtW @ LambdatZtW.T + I)
+L.tofile('L-py.bin')
