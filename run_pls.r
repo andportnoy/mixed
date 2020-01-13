@@ -18,6 +18,6 @@ ll <- plsform(formula, data)
 thetafun <- do.call(pls, ll)
 #print(thetafun(ll$theta))
 
-thetafun2 <- pls(ll$X, ll$y, ll$Zt, ll$Lambdat, ll$thfun)
+#thetafun2 <- pls(ll$X, ll$y, ll$Zt, ll$Lambdat, ll$thfun)
 #print(thetafun2(ll$theta))
 
