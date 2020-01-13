@@ -1,6 +1,12 @@
 # Prerequisites
 Python, R, Suite Sparse installed.
 
+On a Mac you can install the above using Homebrew:
+
+```
+brew install python r suite-sparse
+```
+
 # Installation
 ```
 git clone --recurse-submodules https://github.com/andportnoy/mixed
