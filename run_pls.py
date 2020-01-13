@@ -3,6 +3,9 @@ import mixed
 import numpy as np
 import pandas as pd
 
+from scipy.sparse import csc_matrix
+from sksparse.cholmod import cholesky_AAt
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--data')
 parser.add_argument('--formula')
@@ -41,8 +44,9 @@ ZtWX.tofile('ZtWX-py.bin')
 ZtWy = ZtW @ Wy
 ZtWy.tofile('ZtWy-py.bin')
 
-LambdatZtW = Lambdat @ ZtW
-I = np.eye(Lambdat.shape[0])
+DD = XtWX
 
-L = np.linalg.cholesky(LambdatZtW @ LambdatZtW.T + I)
+LambdatZtW = csc_matrix(Lambdat @ ZtW)
+
+L = cholesky_AAt(LambdatZtW, beta=1).L().todense()
 L.tofile('L-py.bin')
