@@ -5,6 +5,8 @@ from collections import namedtuple
 
 import numpy as np
 
+from scipy.sparse import block_diag, csc_matrix
+
 from patsy import demo_data
 from patsy import dmatrix, dmatrices
 
@@ -48,18 +50,30 @@ def eval_bar(evaluator, tree):
     return IntermediateExpr(False, None, False, [ret])
 
 
-def buildzi(ret, data, env=0):
-    """Build Z_i (corresponds to a single random effects term)."""
+def process_ret(ret, data, env=0):
     X = dmatrix(ret.expr, data, env)
     J = dmatrix(ret.factor, data, env)
+    _, p = X.shape
+    _, l = J.shape
+    Zi = buildzi(X, J)
+    Lambdati = buildlambdati(l, p)
+    return Zi, Lambdati
+
+
+def buildzi(X, J):
+    """Build Z_i (corresponds to a single random effects term)."""
     n, _ = X.shape
     Zi = np.array([np.kron(J[i], X[i]) for i in range(n)])
     return Zi
 
 
-def buildz(rets, data, env=0):
-    Zis = [buildzi(ret, data, env=env) for ret in rets]
-    return np.concatenate(Zis, axis=1).T
+def buildlambdati(l, p):
+    row_ind = np.concatenate([np.arange(i) for i in np.arange(p)+1])
+    col_ind = np.repeat(np.arange(p), np.arange(p)+1)
+    data = (row_ind == col_ind).astype(np.float64)
+    block = csc_matrix((data, (row_ind, col_ind)))
+    Lambdati = block_diag([block for i in range(l)])
+    return Lambdati
 
 
 def evaluate_formula(formula):
@@ -98,11 +112,16 @@ def get_matrices(data, formula):
         else:
             fixef_terms.append(term)
 
-    Z = buildz(randef_terms, data)
+    Zis = []
+    Lambdatis = []
+    for ret in randef_terms:
+        Zi, Lambdati = process_ret(ret, data)
+        Zis.append(Zi)
+        Lambdatis.append(Lambdati)
+
+    Z = np.concatenate(Zis, axis=1).T
+    Lambdat = block_diag(Lambdatis, format='csc')
+
     y, X = dmatrices(ModelDesc(model_description.lhs_termlist, fixef_terms), data)
-
-    q, _ = Z.shape
-
-    Lambdat = np.eye(q)
 
     return X, Z, Lambdat, y
