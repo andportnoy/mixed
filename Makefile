@@ -1,4 +1,4 @@
-DMATRICES = X Z Lambdat
+DMATRICES = X Z Lambdatx Lambdati Lambdatp
 FMATRICES = Whalf WX Wy ZtW XtWX XtWy ZtWX ZtWy L
 
 DMATRICES_R  = $(addsuffix -r.bin,  $(DMATRICES))
