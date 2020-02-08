@@ -17,7 +17,7 @@ data = pd.read_feather(args.data)
 with open(args.formula, 'r') as file:
     formula = file.read().strip()
 
-X, Z, Lambdat, _ = mixed.get_matrices(data, formula)
+X, Z, Lambdat, _, _ = mixed.get_matrices(data, formula)
 
 X.tofile(args.X)
 Z.tofile(args.Z)

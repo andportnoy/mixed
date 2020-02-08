@@ -50,16 +50,6 @@ def eval_bar(evaluator, tree):
     return IntermediateExpr(False, None, False, [ret])
 
 
-def process_ret(ret, data, env=0):
-    X = dmatrix(ret.expr, data, env)
-    J = dmatrix(ret.factor, data, env)
-    _, p = X.shape
-    _, l = J.shape
-    Zi = buildzi(X, J)
-    Lambdati = buildlambdati(l, p)
-    return Zi, Lambdati
-
-
 def buildzi(X, J):
     """Build Z_i (corresponds to a single random effects term)."""
     n, _ = X.shape
@@ -67,13 +57,29 @@ def buildzi(X, J):
     return Zi
 
 
-def buildlambdati(l, p):
+def buildlambdati(p, l):
     row_ind = np.concatenate([np.arange(i) for i in np.arange(p)+1])
     col_ind = np.repeat(np.arange(p), np.arange(p)+1)
     data = (row_ind == col_ind).astype(np.float64)
     block = csc_matrix((data, (row_ind, col_ind)))
     Lambdati = block_diag([block for i in range(l)])
     return Lambdati
+
+
+def buildlind(ps, ls):
+    ms = np.array([(p+1)*p//2 for p in ps])
+    Lind = np.concatenate([
+        np.tile(np.arange(m), l)
+        for m, l in zip(ms, ls)
+    ])
+
+    offsets = np.roll(np.cumsum(ms), 1)
+    offsets[0] = 0
+    offsets = np.repeat(offsets, ms*np.array(ls))
+
+    Lind = Lind + offsets
+
+    return Lind
 
 
 def evaluate_formula(formula):
@@ -101,7 +107,7 @@ def evaluate_formula(formula):
     return model_description
 
 
-def get_matrices(data, formula):
+def get_matrices(data, formula, env=0):
     """Given the data and a formula, build Z and X matrices."""
     model_description = evaluate_formula(formula)
 
@@ -114,14 +120,27 @@ def get_matrices(data, formula):
 
     Zis = []
     Lambdatis = []
+    ps = []
+    ls = []
     for ret in randef_terms:
-        Zi, Lambdati = process_ret(ret, data)
-        Zis.append(Zi)
-        Lambdatis.append(Lambdati)
+        X = dmatrix(ret.expr, data, env)
+        J = dmatrix(ret.factor, data, env)
+        _, p = X.shape
+        _, l = J.shape
+        ps.append(p)
+        ls.append(l)
+        Zis.append(buildzi(X, J))
+        Lambdatis.append(buildlambdati(p, l))
+
+
+    Lind = buildlind(ps, ls)
+
+    def thfun(theta):
+        return theta[Lind]
 
     Z = np.concatenate(Zis, axis=1).T
     Lambdat = block_diag(Lambdatis, format='csc')
 
     y, X = dmatrices(ModelDesc(model_description.lhs_termlist, fixef_terms), data)
 
-    return X, Z, Lambdat, y
+    return X, Z, Lambdat, y, thfun
