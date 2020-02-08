@@ -20,7 +20,7 @@ with open(args.formula, 'r') as file:
 X, Z, Lambdat, _, _ = mixed.get_matrices(data, formula)
 
 X.tofile(args.X)
-Z.tofile(args.Z)
+Z.todense().tofile(args.Z)
 Lambdat.data.tofile(args.Lambdatx)
 Lambdat.indices.tofile(args.Lambdati)
 Lambdat.indptr.tofile(args.Lambdatp)

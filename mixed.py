@@ -5,7 +5,7 @@ from collections import namedtuple
 
 import numpy as np
 
-from scipy.sparse import block_diag, csc_matrix
+from scipy.sparse import block_diag, csc_matrix, hstack
 
 from patsy import demo_data
 from patsy import dmatrix, dmatrices
@@ -53,7 +53,7 @@ def eval_bar(evaluator, tree):
 def buildzi(X, J):
     """Build Z_i (corresponds to a single random effects term)."""
     n, _ = X.shape
-    Zi = np.array([np.kron(J[i], X[i]) for i in range(n)])
+    Zi = csc_matrix([np.kron(J[i], X[i]) for i in range(n)])
     return Zi
 
 
@@ -138,7 +138,7 @@ def get_matrices(data, formula, env=0):
     def thfun(theta):
         return theta[Lind]
 
-    Z = np.concatenate(Zis, axis=1).T
+    Z = hstack(Zis).T
     Lambdat = block_diag(Lambdatis, format='csc')
 
     y, X = dmatrices(ModelDesc(model_description.lhs_termlist, fixef_terms), data)
