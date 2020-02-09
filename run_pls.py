@@ -67,3 +67,6 @@ cu.tofile('cu-py.bin')
 
 RZX = L.solve_L(L.apply_P(Lambdat @ ZtWX), use_LDLt_decomposition=False)
 RZX.tofile('RZX-py.bin')
+
+DD = XtWX - RZX.T @ RZX
+DD.tofile('DD-py.bin')
