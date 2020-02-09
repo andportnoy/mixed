@@ -143,4 +143,7 @@ def get_matrices(data, formula, env=0):
 
     y, X = dmatrices(ModelDesc(model_description.lhs_termlist, fixef_terms), data)
 
+    y = np.asarray(y)
+    X = np.asarray(X)
+
     return X, Z, Lambdat, y, thfun
