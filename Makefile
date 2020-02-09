@@ -50,7 +50,9 @@ $(DMATRICES_PY): data.feather formula.txt
 # generate a pool of random data we can use for testing
 rand.bin:
 	echo 'Generating random data...'
-	python3 -c "__import__('numpy').random.randn(1<<20).tofile('$@')"
+	python3 -c "import numpy as np;\
+	            np.random.seed(42);\
+	            np.random.randn(1<<20).tofile('$@')"
 
 data.feather: columns.txt
 	echo 'Generating data from list of columns...'
