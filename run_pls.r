@@ -20,4 +20,4 @@ ll$theta <- readBin(f, "numeric", length(ll$theta))
 close(f)
 
 devfun <- do.call(pls, ll)
-invisible(devfun(ll$theta))
+devfun(ll$theta)

@@ -1,5 +1,5 @@
 DMATRICES = X Z Lambdatx Lambdati Lambdatp
-FMATRICES = Whalf WX Wy ZtW XtWX XtWy ZtWX ZtWy L Lambdat-new L-new cu RZX DD
+FMATRICES = Whalf WX Wy ZtW XtWX XtWy ZtWX ZtWy L Lambdat-new L-new cu RZX DD deviance
 
 DMATRICES_R  = $(addsuffix -r.bin,  $(DMATRICES))
 DMATRICES_PY = $(addsuffix -py.bin, $(DMATRICES))
