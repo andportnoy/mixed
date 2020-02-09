@@ -61,3 +61,6 @@ Lambdat.todense().tofile('Lambdat-new-py.bin')
 LambdatZtW = csc_matrix(Lambdat @ ZtW)
 L = cholesky_AAt(LambdatZtW, beta=1)
 L.L().todense().tofile('L-new-py.bin')
+
+cu = L.solve_L(L.apply_P(Lambdat @ ZtWy), use_LDLt_decomposition=False)
+cu.tofile('cu-py.bin')
