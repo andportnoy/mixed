@@ -64,3 +64,6 @@ L.L().todense().tofile('L-new-py.bin')
 
 cu = L.solve_L(L.apply_P(Lambdat @ ZtWy), use_LDLt_decomposition=False)
 cu.tofile('cu-py.bin')
+
+RZX = L.solve_L(L.apply_P(Lambdat @ ZtWX), use_LDLt_decomposition=False)
+RZX.tofile('RZX-py.bin')
