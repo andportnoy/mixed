@@ -59,7 +59,7 @@ data.feather: columns.txt
 	python3 generate_data.py --columns $^ --data $@
 
 setup:
-	pip3 install -U patsy pandas feather-format scikit-sparse
+	pip3 install -U patsy pandas feather-format scikit-sparse scipy
 	MAKE='make -j' Rscript -e 'install.packages(c("lme4", "optparse", "feather"), repos="cloud.r-project.org")'
 
 clean:
