@@ -49,11 +49,15 @@ DD = XtWX
 
 LambdatZtW = csc_matrix(Lambdat @ ZtW)
 
-L = cholesky_AAt(LambdatZtW, beta=1).L().todense()
-L.tofile('L-py.bin')
+L = cholesky_AAt(LambdatZtW, beta=1)
+L.L().todense().tofile('L-py.bin')
 
 newtheta = np.fromfile(args.randomdata)[:len(Lambdat.data)]
 
 # deviance function calculations
 Lambdat.data[:] = thfun(newtheta)
 Lambdat.todense().tofile('Lambdat-new-py.bin')
+
+LambdatZtW = csc_matrix(Lambdat @ ZtW)
+L = cholesky_AAt(LambdatZtW, beta=1)
+L.L().todense().tofile('L-new-py.bin')
