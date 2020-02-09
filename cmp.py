@@ -9,4 +9,4 @@ args = parser.parse_args()
 a = np.fromfile(args.a, dtype=np.float64)
 b = np.fromfile(args.b, dtype=np.float64)
 
-assert np.allclose(a, b, rtol=0, atol=1e-15)
+assert np.allclose(a, b, rtol=0, atol=1e-14)
