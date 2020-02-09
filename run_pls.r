@@ -4,7 +4,8 @@ library(lme4pureR)
 
 option_list <- list(
     make_option("--data"),
-    make_option("--formula")
+    make_option("--formula"),
+    make_option("--randomdata")
 )
 
 opt <- parse_args(OptionParser(option_list=option_list))
@@ -13,11 +14,10 @@ data <- read_feather(opt$data)
 formula <- as.formula(readLines(opt$formula))
 
 ll <- plsform(formula, data)
-#print(ll)
 
-thetafun <- do.call(pls, ll)
-#print(thetafun(ll$theta))
+f <- file(opt$randomdata, "rb")
+ll$theta <- readBin(f, "numeric", length(ll$theta))
+close(f)
 
-#thetafun2 <- pls(ll$X, ll$y, ll$Zt, ll$Lambdat, ll$thfun)
-#print(thetafun2(ll$theta))
-
+devfun <- do.call(pls, ll)
+invisible(devfun(ll$theta))

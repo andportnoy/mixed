@@ -1,5 +1,5 @@
 DMATRICES = X Z Lambdatx Lambdati Lambdatp
-FMATRICES = Whalf WX Wy ZtW XtWX XtWy ZtWX ZtWy L
+FMATRICES = Whalf WX Wy ZtW XtWX XtWy ZtWX ZtWy L Lambdat-new
 
 DMATRICES_R  = $(addsuffix -r.bin,  $(DMATRICES))
 DMATRICES_PY = $(addsuffix -py.bin, $(DMATRICES))
@@ -19,13 +19,15 @@ check: check_design check_fit
 check_fit: lme4pureR $(FMATRICES_R) $(FMATRICES_PY) rand.bin
 	$(foreach mat,$(FMATRICES),$(call cmp,$(mat)))
 
-$(FMATRICES_PY): data.feather formula.txt
+$(FMATRICES_PY): data.feather formula.txt rand.bin
 	echo 'Generating fitting matrices in Python...'
-	python3 run_pls.py --formula formula.txt --data data.feather
+	python3 run_pls.py --formula formula.txt --data data.feather \
+		--randomdata rand.bin
 
-$(FMATRICES_R): data.feather formula.txt
+$(FMATRICES_R): data.feather formula.txt rand.bin
 	echo 'Generating fitting matrices in R...'
-	Rscript run_pls.r --formula formula.txt --data data.feather 2> /dev/null
+	Rscript run_pls.r --formula formula.txt --data data.feather \
+		--randomdata rand.bin
 
 .PHONY: lme4pureR
 lme4pureR:

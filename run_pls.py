@@ -9,6 +9,7 @@ from sksparse.cholmod import cholesky_AAt
 parser = argparse.ArgumentParser()
 parser.add_argument('--data')
 parser.add_argument('--formula')
+parser.add_argument('--randomdata')
 
 args = parser.parse_args()
 
@@ -50,3 +51,9 @@ LambdatZtW = csc_matrix(Lambdat @ ZtW)
 
 L = cholesky_AAt(LambdatZtW, beta=1).L().todense()
 L.tofile('L-py.bin')
+
+newtheta = np.fromfile(args.randomdata)[:len(Lambdat.data)]
+
+# deviance function calculations
+Lambdat.data[:] = thfun(newtheta)
+Lambdat.todense().tofile('Lambdat-new-py.bin')
