@@ -16,7 +16,7 @@ endef
 
 check: check_design check_fit
 
-check_fit: lme4pureR $(FMATRICES_R) $(FMATRICES_PY)
+check_fit: lme4pureR $(FMATRICES_R) $(FMATRICES_PY) rand.bin
 	$(foreach mat,$(FMATRICES),$(call cmp,$(mat)))
 
 $(FMATRICES_PY): data.feather formula.txt
@@ -44,6 +44,11 @@ $(DMATRICES_PY): data.feather formula.txt
 	echo 'Generating design matrices in Python...'
 	python3 build_matrices.py --data data.feather --formula formula.txt \
 		$(foreach m,$(DMATRICES),--$m $m-py.bin)
+
+# generate a pool of random data we can use for testing
+rand.bin:
+	echo 'Generating random data...'
+	python3 -c "__import__('numpy').random.randn(1<<20).tofile('$@')"
 
 data.feather: columns.txt
 	echo 'Generating data from list of columns...'
