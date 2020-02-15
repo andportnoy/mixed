@@ -1,6 +1,7 @@
 library(feather)
 library(optparse)
 library(lme4pureR)
+library(minqa)
 
 option_list <- list(
     make_option("--data"),
@@ -15,9 +16,12 @@ formula <- as.formula(readLines(opt$formula))
 
 ll <- plsform(formula, data)
 
-f <- file(opt$randomdata, "rb")
-ll$theta <- readBin(f, "numeric", length(ll$theta))
-close(f)
+#f <- file(opt$randomdata, "rb")
+#ll$theta <- readBin(f, "numeric", length(ll$theta))
+#close(f)
 
 devfun <- do.call(pls, ll)
-devfun(ll$theta)
+lower <- ifelse(ll$theta,0,-Inf)
+upper <- rep.int(Inf, length(ll$theta))
+
+bobyqa(ll$theta, devfun, lower=lower, upper=upper)

@@ -63,7 +63,7 @@ def buildlambdati(p, l):
     data = (row_ind == col_ind).astype(np.float64)
     block = csc_matrix((data, (row_ind, col_ind)))
     Lambdati = block_diag([block for i in range(l)])
-    return Lambdati
+    return Lambdati, data
 
 
 def buildlind(ps, ls):
@@ -120,6 +120,7 @@ def get_matrices(data, formula, env=0):
 
     Zis = []
     Lambdatis = []
+    thetais = []
     ps = []
     ls = []
     for ret in randef_terms:
@@ -130,7 +131,9 @@ def get_matrices(data, formula, env=0):
         ps.append(p)
         ls.append(l)
         Zis.append(buildzi(X, J))
-        Lambdatis.append(buildlambdati(p, l))
+        Lambdati, thetai = buildlambdati(p, l)
+        Lambdatis.append(Lambdati)
+        thetais.append(thetai)
 
 
     Lind = buildlind(ps, ls)
@@ -146,4 +149,7 @@ def get_matrices(data, formula, env=0):
     y = np.asarray(y)
     X = np.asarray(X)
 
-    return X, Z, Lambdat, y, thfun
+    # initial value of theta
+    theta0 = np.concatenate(thetais)
+
+    return X, Z, Lambdat, y, theta0, thfun
